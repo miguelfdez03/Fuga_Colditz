@@ -48,6 +48,6 @@ Sigue estos pasos para instalar y ejecutar el proyecto:
 
 ## Controles del juego
 
-- Usa las **teclas de flecha** (arriba, abajo, izquierda, derecha) para moverte por el mapa.
+- Usa las **teclas de flecha** ("W" arriba, "S" abajo, "A" izquierda, "D" derecha) para moverte por el mapa usa A,W,S,D o las flechitas de la interfaz grafica.
 - Evita el contacto con los guardias para no ser atrapado.
 - Busca los tres elementos clave dispersos por el mapa para desbloquear la salida.
