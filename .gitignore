@@ -1,0 +1,37 @@
+# Archivos generados por IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+
+# Archivos de compilación y salida
+/out/
+build/
+target/
+
+# Archivos de configuración de gradle/maven
+.gradle/
+.mvn/
+!gradle-wrapper.jar
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+*.log
+
+# Archivos temporales de ejecución
+*.class
+*.war
+*.ear
+
+# Recursos o configuraciones personales
+*.env
+*.properties
+
+# Cualquier archivo relacionado al sistema (Windows/Mac)
+*.exe
+*.dmg
+
+# Dependencias descargadas (si aplica no versionarlas)
+lib/*
