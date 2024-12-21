@@ -8,18 +8,19 @@ import javax.swing.SwingUtilities;
 public class Guard extends Thread {
     private static final int[][] DIRECTIONS = {{-1,0}, {1,0}, {0,-1}, {0,1}};
     private static final Random RANDOM = new Random();
-    private static final int MOVE_DELAY = 1000;
     
     private int x;
     private int y;
     private final Semaphore semaphore;
     private final Matrix matrix;
+    private final int moveDelay;
 
-    public Guard(int x, int y, Semaphore semaphore, Matrix matrix) {
+    public Guard(int x, int y, Semaphore semaphore, Matrix matrix, int difficulty) {
         this.x = x;
         this.y = y;
         this.semaphore = semaphore;
         this.matrix = matrix;
+        this.moveDelay = difficulty == 2 ? 500 : 1000; // Faster movement for hard difficulty
     }
 
     @Override
@@ -29,7 +30,7 @@ public class Guard extends Thread {
                 semaphore.acquire();
                 moveGuard();
                 semaphore.release();
-                Thread.sleep(MOVE_DELAY);
+                Thread.sleep(moveDelay);
             }
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();

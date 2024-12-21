@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.Semaphore;
 
 public class GameWindow extends JFrame {
     private Matrix matrix;
@@ -69,7 +70,7 @@ public class GameWindow extends JFrame {
     }
     
     private void handleKeyPress(int keyCode) {
-        if (matrix == null || matrix.lose) return;
+        if (matrix == null || matrix.lose || matrix.character.counter >= 30) return;
         
         String direction = getDirectionFromKey(keyCode);
         if (!direction.isEmpty()) {
@@ -113,6 +114,8 @@ public class GameWindow extends JFrame {
             showGameEndDialog(true);
         } else if (matrix.lose) {
             showGameEndDialog(false);
+        } else if (matrix.character.counter >= 30) {
+            showExceededMovesDialog();
         }
     }
 
@@ -128,11 +131,70 @@ public class GameWindow extends JFrame {
         int messageType = won ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE;
         
         SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(this, message, title, messageType);
-            System.exit(0);
+            int option = JOptionPane.showConfirmDialog(this, 
+                message + "\n¿Quieres jugar de nuevo?", 
+                title, 
+                JOptionPane.YES_NO_OPTION, 
+                messageType);
+            if (option == JOptionPane.YES_OPTION) {
+                restartGame();
+            } else {
+                System.exit(0);
+            }
         });
     }
     
+    private void showExceededMovesDialog() {
+        SwingUtilities.invokeLater(() -> {
+            int option = JOptionPane.showConfirmDialog(this, 
+                "Has excedido el límite de 30 movimientos.\nFin del juego.\n¿Quieres jugar de nuevo?", 
+                "¡Has perdido!", 
+                JOptionPane.YES_NO_OPTION, 
+                JOptionPane.ERROR_MESSAGE);
+            if (option == JOptionPane.YES_OPTION) {
+                restartGame();
+            } else {
+                System.exit(0);
+            }
+        });
+    }
+
+    private void restartGame() {
+        String[] options = {"Fácil", "Medio", "Difícil"};
+        int difficulty = JOptionPane.showOptionDialog(this, 
+            "Selecciona el nivel de dificultad", 
+            "Fuga de Colditz", 
+            JOptionPane.DEFAULT_OPTION, 
+            JOptionPane.QUESTION_MESSAGE, 
+            null, 
+            options, 
+            options[0]);
+        
+        Semaphore guardSemaphore = new Semaphore(1, true);
+        Matrix newMatrix = new Matrix();
+        
+        Guard[] guards = new Guard[3];
+        for (int i = 0; i < guards.length; i++) {
+            guards[i] = new Guard(-1, -1, guardSemaphore, newMatrix, difficulty);
+        }
+        
+        Tool passport = new Tool("Passport");
+        newMatrix.addTool(passport);
+        Tool pliers = new Tool("Pliers");
+        newMatrix.addTool(pliers);
+        Tool uniform = new Tool("Uniform");
+        newMatrix.addTool(uniform);
+        
+        int numGuards = difficulty == 0 ? 1 : difficulty == 1 ? 2 : 3;
+        for (int i = 0; i < numGuards; i++) {
+            newMatrix.addGuard(guards[i]);
+            guards[i].start();
+        }
+        
+        newMatrix.addCharacter(this);
+        setMatrix(newMatrix);
+    }
+
     private void updateStatus() {
         statusLabel.setText("Movimientos restantes: " + (30 - matrix.character.counter));
         String inventory = "Inventario: ";

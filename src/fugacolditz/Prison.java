@@ -22,7 +22,7 @@ public class Prison {
             // Optimizar creación de guardias usando un array
             Guard[] guards = new Guard[3];
             for (int i = 0; i < guards.length; i++) {
-                guards[i] = new Guard(-1, -1, guardSemaphore, matrix);
+                guards[i] = new Guard(-1, -1, guardSemaphore, matrix, difficulty);
             }
             
             // Inicializar tablero
