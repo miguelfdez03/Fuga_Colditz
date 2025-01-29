@@ -35,7 +35,7 @@ Sigue estos pasos para instalar y ejecutar el proyecto:
 
 1. Clona este repositorio:
    ```bash
-   git clone https://github.com/miguelfdez03/Fuga-de-Colditz.git
+   git clone git@github.com:miguelfdez03/Fuga_Colditz.git
    ```
 
 2. Abre el proyecto en un IDE como **IntelliJ IDEA**.
